@@ -20,7 +20,7 @@ set signcolumn=yes
 call plug#begin('~/.vim/plugged')
 
 Plug 'morhetz/gruvbox'
-"Plug 'valloric/youcompleteme' 
+Plug 'valloric/youcompleteme' 
 Plug 'tyru/open-browser.vim' " opens url in browser
 Plug 'http://github.com/tpope/vim-surround' " Surrounding ysw)
 Plug 'https://github.com/preservim/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -55,11 +55,30 @@ nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 nnoremap <leader>ps :Rg<SPACE>
 nnoremap <silent> <Leader>+ :vertical resize +5<CR>
 nnoremap <silent> <Leader>+ :vertical resize -5<CR>
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
 
 
+" Start NERDTree and leave the cursor in it.
+autocmd VimEnter * NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+autocmd VimEnter * NERDTree | wincmd p
 
-
-
+function! s:CloseIfOnlyControlWinLeft()
+  if winnr("$") != 1
+    return
+  endif
+  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
+        \ || &buftype == 'quickfix'
+    q
+  endif
+endfunction
+augroup CloseIfOnlyControlWinLeft
+  au!
+  au BufEnter * call s:CloseIfOnlyControlWinLeft()
+augroup END
 
 
 
